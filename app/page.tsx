@@ -160,8 +160,17 @@ export default function Page() {
             <div className="landing-kicker">We Are</div>
 
             <h1 className="landing-title">
-              Elevating Our <br />
-              Digital Experience
+              {/* Desktop */}
+              <span className="title-desktop">
+                Elevating Our <br />
+                Digital Experience
+              </span>
+
+              {/* Mobile */}
+              <span className="title-mobile">
+                Elevating <br />
+                Our Digital Experience
+              </span>
             </h1>
 
             <p className="landing-desc">
