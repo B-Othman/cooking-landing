@@ -1,0 +1,440 @@
+/* Tailwind v4 */
+@import "tailwindcss/preflight";
+@tailwind utilities;
+
+:root {
+  --landing-blue: #0c72c6;
+  --landing-text: #333;
+  --landing-title: #0a5089;
+
+  /* Card sizing */
+  --card-w: min(92vw, 1900px);
+  --card-h: min(90vh, 820px);
+
+  /* Layout knobs (safe for 768px height) */
+  --card-radius: 30px;
+  --card-pad: clamp(20px, 3.2vw, 64px);
+  --col-gap: clamp(22px, 4.5vw, 90px);
+
+  /* Typography */
+  --kicker: clamp(16px, 1.9vw, 40px);
+  --title: clamp(40px, 3.9vw, 86px);
+  --desc: clamp(13px, 1.15vw, 22px);
+
+  /* Slider */
+  --slide-w: min(500px, 100%);
+  --slide-h: clamp(70px, 9vh, 92px);
+  --slide-inset: 10px;
+  --handle: clamp(54px, 5.5vh, 76px);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--landing-blue);
+  font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto,
+    Helvetica, Arial;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Viewport */
+.landing-viewport {
+  min-height: 100vh;
+  background: var(--landing-blue);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: clamp(16px, 3.2vmin, 56px);
+  overflow: hidden;
+  /* desktop: no scroll because content fits */
+}
+
+/* Card */
+.landing-card {
+  width: var(--card-w);
+  height: var(--card-h);
+  background: #fff;
+  border-radius: var(--card-radius);
+  box-shadow: 0 18px 55px rgba(0, 0, 0, 0.18);
+  overflow: hidden;
+}
+
+/* Inner layout */
+.landing-inner {
+  width: 100%;
+  height: 100%;
+  padding: var(--card-pad);
+  display: flex;
+  gap: var(--col-gap);
+  align-items: center;
+  overflow: hidden;
+}
+
+.landing-left,
+.landing-right {
+  flex: 1 1 0;
+  min-width: 0;
+}
+
+.landing-left {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.landing-right {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Typography */
+.landing-kicker {
+  color: var(--landing-text);
+  font-weight: 700;
+  font-size: var(--kicker);
+  line-height: 1.2;
+}
+
+.landing-title {
+  margin: 10px 0 0;
+  color: var(--landing-title);
+  font-weight: 800;
+  font-size: var(--title);
+  line-height: 1.03;
+  letter-spacing: -0.02em;
+}
+
+.landing-desc {
+  margin: 14px 0 0;
+  color: var(--landing-text);
+  font-weight: 600;
+  font-size: var(--desc);
+  line-height: 1.38;
+  max-width: 62ch;
+}
+
+/* Slider */
+.landing-slide {
+  margin-top: clamp(14px, 1.8vw, 26px);
+  width: var(--slide-w);
+  height: var(--slide-h);
+  border-radius: 9999px;
+  background: #333;
+  box-shadow: 0 14px 24px rgba(0, 0, 0, 0.2);
+  position: relative;
+  overflow: hidden;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: pan-y;
+}
+
+.landing-slideFill {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 0px;
+  border-radius: 9999px;
+  /* ✅ rounded fill */
+  transition: width 220ms ease;
+}
+
+.landing-slide.is-dragging .landing-slideFill {
+  transition: none;
+}
+
+.landing-slideText {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  color: #fff;
+  font-weight: 700;
+  font-size: clamp(16px, 1.6vw, 28px);
+  pointer-events: none;
+}
+
+.landing-slideArrow {
+  position: absolute;
+  right: 18px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #fff;
+  pointer-events: none;
+  display: grid;
+  place-items: center;
+  font-size: clamp(20px, 2vw, 32px);
+}
+
+.landing-slideHandle {
+  position: absolute;
+  left: var(--slide-inset);
+  top: 50%;
+  transform: translate3d(0, -50%, 0);
+  width: var(--handle);
+  height: var(--handle);
+  border-radius: 9999px;
+  background: #fff;
+  display: grid;
+  place-items: center;
+  border: 0;
+  padding: 0;
+  cursor: grab;
+  will-change: transform;
+  touch-action: none;
+}
+
+.landing-slideHandle:active {
+  cursor: grabbing;
+}
+
+.landing-slideMail {
+  font-size: clamp(18px, 1.8vw, 30px);
+  color: #136ec7;
+}
+
+/* Socials */
+.landing-socials {
+  margin-top: clamp(16px, 2vw, 28px);
+  display: flex;
+  gap: clamp(12px, 1.8vw, 22px);
+  flex-wrap: wrap;
+}
+
+.landing-socialBtn {
+  width: clamp(52px, 3.8vw, 74px);
+  height: clamp(52px, 3.8vw, 74px);
+  border-radius: 9999px;
+  background: #fff;
+  border: 1px solid rgba(0, 0, 0, 0.16);
+  box-shadow: 0 12px 18px rgba(0, 0, 0, 0.22);
+  display: grid;
+  place-items: center;
+  text-decoration: none;
+  transition: transform 150ms ease;
+}
+
+.landing-socialBtn:hover {
+  transform: translateY(-2px);
+}
+
+.landing-socialIcon {
+  font-size: clamp(18px, 1.4vw, 28px);
+  color: #555;
+}
+
+/* Hero */
+.landing-heroWrap {
+  width: min(620px, 100%);
+  aspect-ratio: 840 / 634;
+  position: relative;
+}
+
+.landing-heroImg {
+  object-fit: fill;
+  object-position: center bottom;
+  transform: translateY(-12px) scale(1.02);
+  filter: drop-shadow(0px 18px 22px rgba(0, 0, 0, 0.18));
+}
+
+.landing-caption {
+  margin-top: 0px;
+  font-size: clamp(18px, 1.35vw, 26px);
+  font-style: italic;
+  font-weight: 600;
+  color: var(--landing-text);
+  text-align: center;
+  max-width: 45ch;
+  white-space: normal;
+}
+
+/* Modal */
+.landing-modalOverlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.38);
+  display: grid;
+  place-items: center;
+  padding: 20px;
+  z-index: 9999;
+}
+
+.landing-modal {
+  width: min(520px, 100%);
+  background: #fff;
+  border-radius: 18px;
+  box-shadow: 0 22px 80px rgba(0, 0, 0, 0.28);
+  padding: 18px;
+}
+
+.landing-modalTop {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.landing-modalTitle {
+  font-weight: 800;
+  font-size: 20px;
+  color: #111;
+}
+
+.landing-modalClose {
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  padding: 8px;
+  border-radius: 10px;
+}
+
+.landing-modalClose:hover {
+  background: rgba(0, 0, 0, 0.06);
+}
+
+.landing-modalBody {
+  margin-top: 14px;
+}
+
+.landing-modalLabel {
+  font-weight: 700;
+  color: #222;
+  font-size: 14px;
+}
+
+.landing-modalInput {
+  margin-top: 8px;
+  width: 100%;
+  height: 44px;
+  border-radius: 12px;
+  border: 1px solid rgba(0, 0, 0, 0.18);
+  padding: 0 12px;
+  font-size: 15px;
+  outline: none;
+}
+
+.landing-modalInput:focus {
+  border-color: rgba(19, 110, 199, 0.65);
+  box-shadow: 0 0 0 4px rgba(19, 110, 199, 0.18);
+}
+
+.landing-modalError {
+  margin-top: 10px;
+  color: #b42318;
+  font-weight: 600;
+  font-size: 13px;
+}
+
+.landing-modalActions {
+  margin-top: 14px;
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+}
+
+.landing-modalBtn {
+  border: 0;
+  height: 42px;
+  padding: 0 14px;
+  border-radius: 12px;
+  cursor: pointer;
+  font-weight: 800;
+}
+
+.landing-modalBtnPrimary {
+  background: #136ec7;
+  color: #fff;
+}
+
+.landing-modalBtnPrimary:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.landing-modalBtnGhost {
+  background: rgba(0, 0, 0, 0.06);
+  color: #111;
+}
+
+/* Mobile: allow scroll + stack columns */
+@media (max-width: 1100px) {
+  :root {
+    --card-h: auto;
+    --col-gap: 24px;
+  }
+
+  .landing-viewport {
+    overflow-y: auto;
+    overflow-x: hidden;
+    align-items: flex-start;
+    justify-content: center;
+  }
+
+  .landing-card {
+    height: auto;
+    width: min(92vw, 980px);
+  }
+
+  /* ✅ IMPORTANT: stretch children full width (prevents heroWrap 100% => 0) */
+  .landing-inner {
+    height: auto;
+    flex-direction: column;
+    align-items: stretch;
+    /* ✅ was center */
+    gap: 24px;
+    overflow: visible;
+  }
+
+  /* ✅ Put image section first */
+  .landing-right {
+    order: -1;
+    width: 100%;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .landing-left {
+    width: 100%;
+    align-items: center;
+    text-align: center;
+  }
+
+  .landing-desc {
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .landing-slide {
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .landing-socials {
+    justify-content: center;
+  }
+
+  /* ✅ Guarantee the Image wrapper has a real box */
+  .landing-heroWrap {
+    width: min(520px, 100%);
+    aspect-ratio: 840 / 634;
+    margin-left: auto;
+    margin-right: auto;
+    min-height: 220px;
+    /* fallback safety */
+  }
+
+  .landing-caption {
+    text-align: center;
+  }
+}
