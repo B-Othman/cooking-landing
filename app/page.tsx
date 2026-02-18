@@ -217,96 +217,100 @@ export default function Page() {
               <HeroBlock />
             </div>
 
-            {/* ✅ SLIDER */}
-            <div
-              ref={trackRef}
-              className={`landing-slide ${
-                dragging || animating ? "is-dragging" : ""
-              }`}
-              aria-label="Stay informed"
-              role={!isMobile ? "button" : undefined}
-              tabIndex={!isMobile ? 0 : undefined}
-              onClick={() => {
-                if (!isMobile) slideToEndAndOpen();
-              }}
-              onKeyDown={(e) => {
-                if (!isMobile && (e.key === "Enter" || e.key === " ")) {
-                  e.preventDefault();
-                  slideToEndAndOpen();
-                }
-              }}
-            >
+            {/* ✅ COMBINED + CENTERED BLOCK */}
+            <div className="landing-actions">
+              {/* ✅ SLIDER */}
               <div
-                className="landing-slideFill"
-                style={{ width: fillW }}
-                aria-hidden
-              />
-              <div className="landing-slideText">Stay Informed</div>
-
-              <div className="landing-slideArrow" aria-hidden>
-                <FiChevronRight />
-              </div>
-
-              <button
-                ref={handleRef}
-                type="button"
-                className="landing-slideHandle"
-                onPointerDown={onPointerDown}
-                onClick={(e) => {
-                  if (!isMobile) {
+                ref={trackRef}
+                className={`landing-slide ${
+                  dragging || animating ? "is-dragging" : ""
+                }`}
+                aria-label="Stay informed"
+                role={!isMobile ? "button" : undefined}
+                tabIndex={!isMobile ? 0 : undefined}
+                onClick={() => {
+                  if (!isMobile) slideToEndAndOpen();
+                }}
+                onKeyDown={(e) => {
+                  if (!isMobile && (e.key === "Enter" || e.key === " ")) {
                     e.preventDefault();
-                    e.stopPropagation();
                     slideToEndAndOpen();
                   }
                 }}
-                aria-label={isMobile ? "Drag to open" : "Click to open"}
-                style={{
-                  transform: `translate3d(${x}px, -50%, 0)`,
-                  transition:
-                    dragging || animating ? "none" : "transform 220ms ease",
-                }}
               >
-                <MdEmail className="landing-slideMail" />
-              </button>
-            </div>
+                <div
+                  className="landing-slideFill"
+                  style={{ width: fillW }}
+                  aria-hidden
+                />
+                <div className="landing-slideText">Stay Informed</div>
 
-            <div className="landing-socials">
-              <a
-                className="landing-socialBtn"
-                href="https://www.facebook.com/ICS1Aviation"
-                aria-label="Facebook"
-                target="_blank"
-                rel="noreferrer"
-              >
-                <FaFacebookF className="landing-socialIcon" />
-              </a>
-              <a
-                className="landing-socialBtn"
-                href="https://www.linkedin.com/company/ics-aviation/"
-                aria-label="LinkedIn"
-                target="_blank"
-                rel="noreferrer"
-              >
-                <FaLinkedinIn className="landing-socialIcon" />
-              </a>
-              <a
-                className="landing-socialBtn"
-                href="https://www.instagram.com/ics_aviation/"
-                aria-label="Instagram"
-                target="_blank"
-                rel="noreferrer"
-              >
-                <FaInstagram className="landing-socialIcon" />
-              </a>
-              <a
-                className="landing-socialBtn"
-                href="https://www.youtube.com/@ICSAviation-TrainingSolutions"
-                aria-label="YouTube"
-                target="_blank"
-                rel="noreferrer"
-              >
-                <FaYoutube className="landing-socialIcon" />
-              </a>
+                <div className="landing-slideArrow" aria-hidden>
+                  <FiChevronRight />
+                </div>
+
+                <button
+                  ref={handleRef}
+                  type="button"
+                  className="landing-slideHandle"
+                  onPointerDown={onPointerDown}
+                  onClick={(e) => {
+                    if (!isMobile) {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      slideToEndAndOpen();
+                    }
+                  }}
+                  aria-label={isMobile ? "Drag to open" : "Click to open"}
+                  style={{
+                    transform: `translate3d(${x}px, -50%, 0)`,
+                    transition:
+                      dragging || animating ? "none" : "transform 220ms ease",
+                  }}
+                >
+                  <MdEmail className="landing-slideMail" />
+                </button>
+              </div>
+
+              {/* SOCIALS */}
+              <div className="landing-socials">
+                <a
+                  className="landing-socialBtn"
+                  href="https://www.facebook.com/ICS1Aviation"
+                  aria-label="Facebook"
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  <FaFacebookF className="landing-socialIcon" />
+                </a>
+                <a
+                  className="landing-socialBtn"
+                  href="https://www.linkedin.com/company/ics-aviation/"
+                  aria-label="LinkedIn"
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  <FaLinkedinIn className="landing-socialIcon" />
+                </a>
+                <a
+                  className="landing-socialBtn"
+                  href="https://www.instagram.com/ics_aviation/"
+                  aria-label="Instagram"
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  <FaInstagram className="landing-socialIcon" />
+                </a>
+                <a
+                  className="landing-socialBtn"
+                  href="https://www.youtube.com/@ICSAviation-TrainingSolutions"
+                  aria-label="YouTube"
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  <FaYoutube className="landing-socialIcon" />
+                </a>
+              </div>
             </div>
           </div>
 
