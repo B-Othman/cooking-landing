@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
+import { Poppins } from "next/font/google";
 import {
   FaFacebookF,
   FaLinkedinIn,
@@ -11,6 +12,33 @@ import {
 import { MdEmail } from "react-icons/md";
 import { FiChevronRight } from "react-icons/fi";
 import NotifyModal from "./NotifyModal";
+
+const poppins = Poppins({
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700", "800"],
+});
+
+function HeroBlock() {
+  return (
+    <>
+      <div className="landing-heroFrame" aria-hidden>
+        <Image
+          src="/pilots.png"
+          alt="Pilots"
+          width={840}
+          height={634}
+          priority
+          className="landing-heroImg"
+        />
+      </div>
+
+      <div className="landing-caption">
+        Advancing aviation expertise through knowledge, partnership, and
+        professionalism.
+      </div>
+    </>
+  );
+}
 
 export default function Page() {
   const [open, setOpen] = useState(false);
@@ -25,7 +53,7 @@ export default function Page() {
     return () => mq.removeEventListener("change", update);
   }, []);
 
-  // Slider
+  // Slider refs
   const trackRef = useRef<HTMLDivElement | null>(null);
   const handleRef = useRef<HTMLButtonElement | null>(null);
 
@@ -34,12 +62,14 @@ export default function Page() {
   const [dragging, setDragging] = useState(false);
   const [animating, setAnimating] = useState(false);
 
-  const [handleW, setHandleW] = useState(76);
+  const [handleW, setHandleW] = useState(56);
   useEffect(() => {
     const el = handleRef.current;
     if (!el) return;
-    const update = () => setHandleW(el.clientWidth || 76);
+
+    const update = () => setHandleW(el.clientWidth || 56);
     update();
+
     const ro = new ResizeObserver(update);
     ro.observe(el);
     return () => ro.disconnect();
@@ -69,7 +99,7 @@ export default function Page() {
     reset();
   };
 
-  // Desktop click -> animate slide then open modal
+  // ✅ Desktop click -> animate slide then open modal
   const slideToEndAndOpen = () => {
     const max = getMaxX();
     if (!max) return openModal();
@@ -103,7 +133,7 @@ export default function Page() {
     requestAnimationFrame(tick);
   };
 
-  // Mobile drag only
+  // ✅ Mobile drag only
   const onPointerDown = (e: React.PointerEvent) => {
     if (!isMobile) return;
 
@@ -144,7 +174,7 @@ export default function Page() {
       window.removeEventListener("pointercancel", up);
     };
 
-    window.addEventListener("pointermove", move);
+    window.addEventListener("pointermove", move, { passive: false });
     window.addEventListener("pointerup", up);
     window.addEventListener("pointercancel", up);
   };
@@ -152,7 +182,7 @@ export default function Page() {
   const fillW = Math.max(0, INSET + handleW + x);
 
   return (
-    <main className="landing-viewport">
+    <main className={`${poppins.className} landing-viewport`}>
       <section className="landing-card">
         <div className="landing-inner">
           {/* LEFT */}
@@ -181,34 +211,18 @@ export default function Page() {
               initiatives. Stay connected as we prepare to launch.
             </p>
 
-            {/* ✅ MOBILE: HERO ABOVE SLIDER + SOCIALS */}
-            {isMobile ? (
-              <div className="landing-mobileHero">
-                <div className="landing-heroWrap">
-                  <Image
-                    src="/pilots.png"
-                    alt="Pilots"
-                    fill
-                    priority
-                    sizes="(max-width: 1100px) 520px, 695px"
-                    className="landing-heroImg"
-                  />
-                </div>
+            {/* MOBILE HERO (shown only on mobile via CSS) */}
+            <div className="landing-heroSlot landing-heroSlot--mobile">
+              <HeroBlock />
+            </div>
 
-                <div className="landing-caption">
-                  Advancing aviation expertise through knowledge, partnership,
-                  and professionalism.
-                </div>
-              </div>
-            ) : null}
-
-            {/* SLIDER */}
+            {/* ✅ SLIDER */}
             <div
               ref={trackRef}
               className={`landing-slide ${
                 dragging || animating ? "is-dragging" : ""
               }`}
-              aria-label="Notify me"
+              aria-label="Stay informed"
               role={!isMobile ? "button" : undefined}
               tabIndex={!isMobile ? 0 : undefined}
               onClick={() => {
@@ -238,6 +252,7 @@ export default function Page() {
                 className="landing-slideHandle"
                 onPointerDown={onPointerDown}
                 onClick={(e) => {
+                  // Desktop: clicking the handle also triggers slide+open
                   if (!isMobile) {
                     e.preventDefault();
                     e.stopPropagation();
@@ -256,41 +271,51 @@ export default function Page() {
             </div>
 
             <div className="landing-socials">
-              <a className="landing-socialBtn" href="#" aria-label="Facebook">
+              <a
+                className="landing-socialBtn"
+                href="https://www.facebook.com/ICS1Aviation"
+                aria-label="Facebook"
+                target="_blank"
+                rel="noreferrer"
+              >
                 <FaFacebookF className="landing-socialIcon" />
               </a>
-              <a className="landing-socialBtn" href="#" aria-label="LinkedIn">
+              <a
+                className="landing-socialBtn"
+                href="https://www.linkedin.com/company/ics-aviation/"
+                aria-label="LinkedIn"
+                target="_blank"
+                rel="noreferrer"
+              >
                 <FaLinkedinIn className="landing-socialIcon" />
               </a>
-              <a className="landing-socialBtn" href="#" aria-label="Instagram">
+              <a
+                className="landing-socialBtn"
+                href="https://www.instagram.com/ics_aviation/"
+                aria-label="Instagram"
+                target="_blank"
+                rel="noreferrer"
+              >
                 <FaInstagram className="landing-socialIcon" />
               </a>
-              <a className="landing-socialBtn" href="#" aria-label="YouTube">
+              <a
+                className="landing-socialBtn"
+                href="https://www.youtube.com/@ICSAviation-TrainingSolutions"
+                aria-label="YouTube"
+                target="_blank"
+                rel="noreferrer"
+              >
                 <FaYoutube className="landing-socialIcon" />
               </a>
             </div>
           </div>
 
-          {/* ✅ DESKTOP ONLY RIGHT */}
-          {!isMobile ? (
-            <div className="landing-right">
-              <div className="landing-heroWrap">
-                <Image
-                  src="/pilots.png"
-                  alt="Pilots"
-                  fill
-                  priority
-                  sizes="(max-width: 1100px) 520px, 695px"
-                  className="landing-heroImg"
-                />
-              </div>
-
-              <div className="landing-caption">
-                Advancing aviation expertise through knowledge, partnership, and
-                professionalism.
-              </div>
+          {/* RIGHT (desktop hero) */}
+          <div className="landing-right">
+            <div className="landing-heroSlot landing-heroSlot--desktop">
+              <HeroBlock />
             </div>
-          ) : null}
+          </div>
         </div>
       </section>
 
