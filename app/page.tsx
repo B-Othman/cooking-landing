@@ -1,5 +1,6 @@
 "use client";
 
+import type React from "react";
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import { Poppins } from "next/font/google";
@@ -53,7 +54,7 @@ export default function Page() {
     return () => mq.removeEventListener("change", update);
   }, []);
 
-  // Slider refs
+  // Slider
   const trackRef = useRef<HTMLDivElement | null>(null);
   const handleRef = useRef<HTMLButtonElement | null>(null);
 
@@ -99,7 +100,7 @@ export default function Page() {
     reset();
   };
 
-  // ✅ Desktop click -> animate slide then open modal
+  // Desktop click -> animate slide then open modal
   const slideToEndAndOpen = () => {
     const max = getMaxX();
     if (!max) return openModal();
@@ -133,14 +134,14 @@ export default function Page() {
     requestAnimationFrame(tick);
   };
 
-  // ✅ Mobile drag only
-  const onPointerDown = (e: React.PointerEvent) => {
+  // Mobile drag only
+  const onPointerDown = (e: React.PointerEvent<HTMLButtonElement>) => {
     if (!isMobile) return;
 
     const maxX = getMaxX();
     if (!maxX) return;
 
-    (e.currentTarget as HTMLElement).setPointerCapture(e.pointerId);
+    e.currentTarget.setPointerCapture(e.pointerId);
     setDragging(true);
 
     const startClientX = e.clientX;
@@ -252,7 +253,6 @@ export default function Page() {
                 className="landing-slideHandle"
                 onPointerDown={onPointerDown}
                 onClick={(e) => {
-                  // Desktop: clicking the handle also triggers slide+open
                   if (!isMobile) {
                     e.preventDefault();
                     e.stopPropagation();

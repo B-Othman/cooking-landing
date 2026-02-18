@@ -7,28 +7,36 @@
   --landing-text: #333;
   --landing-title: #0a5089;
 
-  /* ✅ Wider card (more white space) */
-  --card-w: min(96vw, 1720px);
-  --card-h: min(86vh, 860px);
+  /* viewport padding (blue frame thickness) */
+  --viewport-pad: clamp(14px, 2.6vmin, 48px);
 
+  /* Card */
+  --card-w: min(94vw, 1660px);
+  --card-h: min(86vh, 840px);
   --card-radius: clamp(26px, 2.6vw, 56px);
-  --card-pad: clamp(26px, 3.4vw, 78px);
-  --col-gap: clamp(26px, 5.2vw, 110px);
+  --card-pad: clamp(24px, 3vw, 72px);
 
+  /* Gap + column control (reduces "middle white gap") */
+  --col-gap: clamp(18px, 3.8vw, 84px);
+  --left-col-max: clamp(640px, 45vw, 800px);
+
+  /* Typography */
   --kicker: clamp(18px, 2vw, 40px);
   --title: clamp(46px, 4.2vw, 96px);
   --desc: clamp(14px, 1.1vw, 20px);
 
-  --social: clamp(52px, 4vw, 74px);
-
-  /* ✅ Slider sizing */
+  /* Slider */
   --slide-w: min(420px, 100%);
   --slide-h: clamp(66px, 7.8vh, 88px);
+  --slide-handle: clamp(46px, 5.6vh, 62px);
   --slide-inset: 10px;
-  --handle: clamp(46px, 5.6vh, 62px);
 
-  --hero-img: 620px;
-  --hero-col: clamp(620px, 42vw, 720px);
+  /* Socials */
+  --social: clamp(52px, 4vw, 74px);
+
+  /* Hero sizing (constant across monitors) */
+  --hero-img: 600px;
+  --hero-col: clamp(520px, 36vw, 600px);
 }
 
 * {
@@ -53,7 +61,7 @@ body {
   background: var(--landing-blue);
   display: grid;
   place-items: center;
-  padding: clamp(14px, 2.6vmin, 48px);
+  padding: var(--viewport-pad);
   overflow: hidden;
 }
 
@@ -73,11 +81,9 @@ body {
   height: 100%;
   padding: var(--card-pad);
   display: grid;
-  grid-template-columns: minmax(520px, 1fr) var(--hero-col);
+  grid-template-columns: minmax(520px, var(--left-col-max)) var(--hero-col);
   align-items: center;
   gap: var(--col-gap);
-  align-content: center;
-  justify-content: center;
 }
 
 /* Columns */
@@ -135,7 +141,6 @@ body {
   user-select: none;
   -webkit-user-select: none;
   touch-action: pan-y;
-  cursor: pointer;
 }
 
 .landing-slideFill {
@@ -145,7 +150,6 @@ body {
   bottom: 0;
   width: 0px;
   border-radius: 9999px;
-  background: rgba(255, 255, 255, 0.06);
   transition: width 220ms ease;
 }
 
@@ -182,8 +186,8 @@ body {
   left: var(--slide-inset);
   top: 50%;
   transform: translate3d(0, -50%, 0);
-  width: var(--handle);
-  height: var(--handle);
+  width: var(--slide-handle);
+  height: var(--slide-handle);
   border-radius: 9999px;
   background: #fff;
   display: grid;
@@ -235,7 +239,7 @@ body {
   color: #555;
 }
 
-/* ✅ HERO */
+/* HERO */
 .landing-heroFrame {
   width: 100%;
   display: grid;
@@ -280,25 +284,34 @@ body {
   transform: translateY(-14px);
 }
 
+/* ✅ REQUIRED BLOCKS (your requested place for changes) */
 @media (max-width: 1600px) {
   :root {
+    /* more blue margin (card gets smaller) */
+    --viewport-pad: clamp(22px, 3.4vmin, 72px);
+
+    /* reduce middle gap */
+    --col-gap: clamp(14px, 2.6vw, 56px);
+    --left-col-max: clamp(600px, 46vw, 720px);
+
     /* one step smaller */
     --hero-img: 480px;
-    --hero-col: clamp(480px, 34vw, 560px);
-
-    /* ✅ THIS is the middle white gap */
-    --col-gap: clamp(18px, 3.2vw, 70px);
+    --hero-col: clamp(470px, 34vw, 560px);
   }
 }
 
 @media (max-width: 1450px) {
   :root {
-    /* one more step smaller */
-    --hero-img: 440px;
-    --hero-col: clamp(440px, 32vw, 520px);
+    /* more blue margin (card gets smaller) */
+    --viewport-pad: clamp(24px, 3.8vmin, 82px);
 
-    /* ✅ smaller middle gap */
-    --col-gap: clamp(16px, 2.8vw, 60px);
+    /* reduce middle gap more */
+    --col-gap: clamp(12px, 2.4vw, 48px);
+    --left-col-max: clamp(560px, 48vw, 680px);
+
+    /* one step smaller */
+    --hero-img: 440px;
+    --hero-col: clamp(420px, 32vw, 520px);
   }
 }
 
@@ -378,204 +391,5 @@ body {
 
   .landing-caption {
     margin-top: 6px;
-  }
-}
-
-/* =========================
-   MODAL (NotifyModal)
-   ========================= */
-
-.landing-modalOverlay {
-  position: fixed;
-  inset: 0;
-  z-index: 9999;
-
-  background: rgba(17, 24, 39, 0.48);
-  /* dark overlay */
-  backdrop-filter: blur(6px);
-
-  display: grid;
-  place-items: center;
-
-  padding: 18px;
-}
-
-.landing-modal {
-  width: min(560px, 92vw);
-  background: #fff;
-  border-radius: 20px;
-  box-shadow: 0 30px 110px rgba(0, 0, 0, 0.35);
-
-  padding: 18px;
-  border: 1px solid rgba(0, 0, 0, 0.06);
-}
-
-.landing-modalTop {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-}
-
-.landing-modalTitle {
-  font-weight: 800;
-  font-size: 20px;
-  letter-spacing: -0.01em;
-  color: #0b1220;
-}
-
-.landing-modalClose {
-  width: 40px;
-  height: 40px;
-  border-radius: 12px;
-  border: 0;
-  background: rgba(0, 0, 0, 0.06);
-  cursor: pointer;
-
-  display: grid;
-  place-items: center;
-
-  font-size: 18px;
-  color: #0b1220;
-  transition: transform 120ms ease, background 120ms ease;
-}
-
-.landing-modalClose:hover {
-  background: rgba(0, 0, 0, 0.1);
-  transform: translateY(-1px);
-}
-
-.landing-modalBody {
-  margin-top: 14px;
-}
-
-.landing-modalLabel {
-  display: block;
-  font-weight: 700;
-  font-size: 14px;
-  color: #111827;
-}
-
-.landing-modalInput {
-  margin-top: 8px;
-  width: 100%;
-  height: 46px;
-
-  border-radius: 14px;
-  border: 1px solid rgba(0, 0, 0, 0.16);
-  background: #fff;
-
-  padding: 0 14px;
-  font-size: 15px;
-  color: #0b1220;
-
-  outline: none;
-}
-
-.landing-modalInput::placeholder {
-  color: rgba(17, 24, 39, 0.45);
-}
-
-.landing-modalInput:focus {
-  border-color: rgba(19, 110, 199, 0.75);
-  box-shadow: 0 0 0 4px rgba(19, 110, 199, 0.18);
-}
-
-.landing-modalError {
-  margin-top: 10px;
-  color: #b42318;
-  font-weight: 600;
-  font-size: 13px;
-}
-
-.landing-modalActions {
-  margin-top: 16px;
-  display: flex;
-  gap: 10px;
-  justify-content: flex-end;
-}
-
-.landing-modalBtn {
-  border: 0;
-  height: 44px;
-  padding: 0 14px;
-  border-radius: 14px;
-  cursor: pointer;
-  font-weight: 800;
-  font-size: 14px;
-}
-
-.landing-modalBtn:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
-}
-
-.landing-modalBtnPrimary {
-  background: #136ec7;
-  color: #fff;
-}
-
-.landing-modalBtnPrimary:hover {
-  filter: brightness(0.98);
-}
-
-.landing-modalBtnGhost {
-  background: rgba(0, 0, 0, 0.06);
-  color: #0b1220;
-}
-
-/* Success state */
-.landing-modalSuccess {
-  display: flex;
-  gap: 12px;
-  align-items: flex-start;
-  padding: 12px;
-  border-radius: 16px;
-  background: rgba(19, 110, 199, 0.08);
-  border: 1px solid rgba(19, 110, 199, 0.18);
-}
-
-.landing-modalSuccessIcon {
-  width: 34px;
-  height: 34px;
-  border-radius: 12px;
-  background: #136ec7;
-  color: #fff;
-  display: grid;
-  place-items: center;
-  font-weight: 900;
-}
-
-.landing-modalSuccessTitle {
-  font-weight: 900;
-  color: #0b1220;
-  letter-spacing: -0.01em;
-}
-
-.landing-modalSuccessDesc {
-  margin-top: 2px;
-  color: rgba(17, 24, 39, 0.8);
-  font-weight: 600;
-  font-size: 14px;
-}
-
-.landing-modalEmail {
-  color: #0b1220;
-  font-weight: 800;
-}
-
-/* Mobile tweaks */
-@media (max-width: 520px) {
-  .landing-modal {
-    padding: 16px;
-    border-radius: 18px;
-  }
-
-  .landing-modalActions {
-    flex-direction: column-reverse;
-  }
-
-  .landing-modalBtn {
-    width: 100%;
   }
 }
