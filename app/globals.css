@@ -582,7 +582,6 @@ body {
 
 /* ✅ Wrap slider + socials, center them together */
 .landing-actions {
-  width: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
