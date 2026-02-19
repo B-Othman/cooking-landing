@@ -42,15 +42,17 @@
   --hero-img: 620px;
   --hero-col: clamp(620px, 42vw, 720px);
 
-  /* ✅ Any min()/minmax() used in @apply must be vars */
+  /* Layout values that include commas are kept in vars (Tailwind v4 safe) */
   --landing-cols: minmax(520px, 1fr) var(--hero-col);
   --hero-img-w: min(var(--hero-img), 100%);
   --hero-frame-w-m: min(520px, 100%);
   --hero-img-w-m: min(440px, 100%);
   --hero-slot-mt: clamp(10px, 2.4vw, 18px);
+
+  /* Modal width */
   --modal-w: min(560px, 92vw);
 
-  /* Shadows / colors with commas -> vars */
+  /* Shadows / colors */
   --shadow-card: 0 18px 55px rgba(0, 0, 0, 0.18);
   --shadow-slider: 0 14px 24px rgba(0, 0, 0, 0.22);
   --shadow-handle: 0 10px 18px rgba(0, 0, 0, 0.22);
@@ -68,11 +70,10 @@
   --slide-fill: rgba(255, 255, 255, 0.06);
   --drop: drop-shadow(0px 18px 22px rgba(0, 0, 0, 0.18));
 
-  /* ✅ Equal padding (no separate pt/pb/px) */
+  /* Equal blue padding + mobile fit */
   --vp-pad: clamp(14px, 3vmin, 28px);
   --vp-pad-m: clamp(16px, 3.2vmin, 24px);
 
-  /* ✅ Mobile derived sizes (keep blue border equal) */
   --card-w-m: calc(100% - (2 * var(--vp-pad-m)));
   --card-max-h-m: calc(100dvh - (2 * var(--vp-pad-m)));
 }
@@ -95,312 +96,32 @@
   }
 }
 
-@layer components {
-
-  /* Viewport */
-  .landing-viewport {
-    @apply min-h-[100dvh] grid place-items-center overflow-hidden p-[var(--vp-pad)];
-    background: var(--landing-blue);
+/* Variable-only breakpoints (keep design behavior) */
+@media (max-width: 1600px) {
+  :root {
+    --hero-img: 480px;
+    --hero-col: clamp(480px, 34vw, 560px);
+    --card-w: min(91vw, 1385px);
+    --col-gap: clamp(18px, 3.2vw, 70px);
+    --hero-img-w: min(var(--hero-img), 100%);
+    --landing-cols: minmax(520px, 1fr) var(--hero-col);
   }
+}
 
-  /* Card */
-  .landing-card {
-    @apply w-[var(--card-w)] h-[var(--card-h)] rounded-[var(--card-radius)] shadow-[var(--shadow-card)] overflow-hidden bg-white;
+@media (max-width: 1450px) {
+  :root {
+    --hero-img: 440px;
+    --hero-col: clamp(440px, 32vw, 520px);
+    --card-w: min(90vw, 1385px);
+    --col-gap: clamp(16px, 2.8vw, 60px);
+    --hero-img-w: min(var(--hero-img), 100%);
+    --landing-cols: minmax(520px, 1fr) var(--hero-col);
   }
+}
 
-  /* Inner layout */
-  .landing-inner {
-    @apply w-full h-full pt-[var(--card-pad)] pr-[var(--card-pad)] pb-[var(--card-pad)] pl-[var(--card-pad)] grid grid-cols-[var(--landing-cols)] items-center gap-[var(--col-gap)] content-center justify-center;
-  }
-
-  /* Columns */
-  .landing-left {
-    @apply min-w-0 flex flex-col items-start;
-  }
-
-  .landing-right {
-    @apply min-w-0 flex flex-col items-center justify-center;
-  }
-
-  /* Typography */
-  .landing-kicker {
-    @apply text-[color:var(--landing-text)] font-bold text-[length:var(--kicker)] leading-[1.15];
-  }
-
-  .landing-title {
-    @apply text-[color:var(--landing-title)] font-extrabold text-[length:var(--title)] leading-[1.03] tracking-[-0.02em] mt-2.5 mb-0 mx-0;
-  }
-
-  .landing-desc {
-    @apply text-[color:var(--landing-text)] font-medium text-[length:var(--desc)] leading-[1.45] max-w-[56ch] mt-4 mb-0 mx-0;
-  }
-
-  /* Actions */
-  .landing-actions {
-    @apply flex flex-col items-center gap-[var(--actions-gap)] mt-[var(--actions-mt)];
-  }
-
-  /* Slider */
-  .landing-slide {
-    @apply w-[var(--slide-w)] h-[var(--slide-h)] shadow-[var(--shadow-slider)] relative overflow-hidden select-none touch-pan-y cursor-pointer rounded-full mx-auto bg-[#333];
-    user-select: none;
-    -webkit-user-select: none;
-  }
-
-  .landing-slideFill {
-    @apply absolute w-0 transition-[width] duration-[220ms] ease-out rounded-full left-0 inset-y-0;
-    background: var(--slide-fill);
-  }
-
-  .landing-slide.is-dragging .landing-slideFill {
-    @apply transition-none;
-  }
-
-  .landing-slideText {
-    @apply absolute grid place-items-center text-white font-bold text-[length:var(--slide-text)] tracking-[-0.01em] pointer-events-none inset-0;
-  }
-
-  .landing-slideArrow {
-    @apply absolute -translate-y-1/2 text-white pointer-events-none grid place-items-center text-[length:var(--slide-arrow)] right-[18px] top-1/2;
-  }
-
-  .landing-slideHandle {
-    @apply absolute left-[var(--slide-inset)] w-[var(--handle)] h-[var(--handle)] grid place-items-center cursor-grab will-change-transform touch-none shadow-[var(--shadow-handle)] p-0 rounded-full border-0 top-1/2 active:cursor-grabbing bg-white;
-    transform: translate3d(0, -50%, 0);
-  }
-
-  .landing-slideMail {
-    @apply text-[length:var(--slide-mail)];
-    color: var(--brand-blue);
-  }
-
-  /* Socials */
-  .landing-socials {
-    @apply flex gap-[var(--social-gap)] flex-wrap justify-center w-full;
-  }
-
-  .landing-socialBtn {
-    @apply w-[var(--social)] h-[var(--social)] shadow-[var(--shadow-social)] grid place-items-center no-underline transition-transform duration-150 ease-out rounded-full border border-solid border-[color:var(--border-soft)] hover:-translate-y-0.5 bg-white;
-  }
-
-  .landing-socialIcon {
-    @apply text-[length:var(--social-icon)] text-[#555];
-  }
-
-  /* Hero */
-  .landing-heroFrame {
-    @apply w-full grid place-items-center relative;
-  }
-
-  .landing-heroImg {
-    @apply w-[var(--hero-img-w)] h-auto block -translate-y-1.5;
-    filter: var(--drop);
-  }
-
-  .landing-caption {
-    @apply text-[length:var(--caption-size)] italic font-semibold text-[color:var(--landing-text)] text-center max-w-[48ch] mt-1.5;
-  }
-
-  /* Title switching */
-  .title-mobile {
-    @apply hidden;
-  }
-
-  .title-desktop {
-    @apply inline;
-  }
-
-  /* Hero slot visibility */
-  .landing-heroSlot--mobile {
-    @apply hidden;
-  }
-
-  .landing-heroSlot--desktop {
-    @apply block -translate-y-3.5;
-  }
-
-  @media (max-width: 1600px) {
-    :root {
-      --hero-img: 480px;
-      --hero-col: clamp(480px, 34vw, 560px);
-      --card-w: min(91vw, 1385px);
-      --col-gap: clamp(18px, 3.2vw, 70px);
-      --landing-cols: minmax(520px, 1fr) var(--hero-col);
-      --hero-img-w: min(var(--hero-img), 100%);
-    }
-  }
-
-  @media (max-width: 1450px) {
-    :root {
-      --hero-img: 440px;
-      --hero-col: clamp(440px, 32vw, 520px);
-      --card-w: min(90vw, 1385px);
-      --col-gap: clamp(16px, 2.8vw, 60px);
-      --landing-cols: minmax(520px, 1fr) var(--hero-col);
-      --hero-img-w: min(var(--hero-img), 100%);
-    }
-  }
-
-  /* Mobile */
-  @media (max-width: 1100px) {
-    :root {
-      --card-h: auto;
-      --card-w: var(--card-w-m);
-    }
-
-    /* ✅ Keep blue margin equal: viewport DOES NOT scroll */
-    .landing-viewport {
-      @apply overflow-hidden p-[var(--vp-pad-m)] place-items-center justify-center;
-    }
-
-    /* ✅ Card fits inside padded viewport; scroll INSIDE card */
-    .landing-card {
-      @apply h-auto w-[var(--card-w)] max-h-[var(--card-max-h-m)] overflow-y-auto;
-      -webkit-overflow-scrolling: touch;
-    }
-
-    .landing-inner {
-      @apply h-auto grid-cols-[1fr] gap-[22px];
-    }
-
-    .landing-left {
-      @apply items-center text-center;
-    }
-
-    .landing-desc {
-      @apply mx-auto;
-    }
-
-    .landing-right {
-      @apply hidden;
-    }
-
-    .landing-heroSlot--desktop {
-      @apply hidden;
-    }
-
-    .landing-heroSlot--mobile {
-      @apply block -translate-y-2 mt-[var(--hero-slot-mt)];
-    }
-
-    .title-desktop {
-      @apply hidden;
-    }
-
-    .title-mobile {
-      @apply inline;
-    }
-
-    .landing-heroFrame {
-      @apply w-[var(--hero-frame-w-m)];
-    }
-
-    .landing-heroImg {
-      @apply w-[var(--hero-img-w-m)] -translate-y-1;
-    }
-  }
-
-  /* Modal */
-  .landing-modalOverlay {
-    @apply fixed z-[9999] backdrop-blur-[6px] grid place-items-center p-[18px] inset-0;
-    background: var(--overlay);
-  }
-
-  .landing-modal {
-    @apply w-[var(--modal-w)] shadow-[var(--shadow-modal)] border p-[18px] rounded-[20px] border-solid border-[color:var(--border-subtle)] bg-white;
-  }
-
-  .landing-modalTop {
-    @apply flex items-center justify-between gap-3;
-  }
-
-  .landing-modalTitle {
-    @apply font-extrabold text-xl tracking-[-0.01em] text-[#0b1220];
-  }
-
-  .landing-modalClose {
-    @apply w-10 h-10 cursor-pointer grid place-items-center text-lg text-[#0b1220] rounded-xl border-0 hover:-translate-y-px;
-    background: rgba(0, 0, 0, 0.06);
-    transition: transform 120ms ease, background 120ms ease;
-  }
-
-  .landing-modalClose:hover {
-    background: rgba(0, 0, 0, 0.1);
-  }
-
-  .landing-modalBody {
-    @apply mt-3.5;
-  }
-
-  .landing-modalLabel {
-    @apply block font-bold text-sm text-gray-900;
-  }
-
-  .landing-modalInput {
-    @apply w-full h-[46px] border text-[15px] text-[#0b1220] mt-2 px-3.5 py-0 rounded-[14px] border-solid border-[color:var(--border-soft)] focus:shadow-[var(--shadow-focus)] focus:border-[color:var(--brand-blue)] bg-white;
-    outline: none;
-  }
-
-  .landing-modalInput::placeholder {
-    color: var(--placeholder);
-  }
-
-  .landing-modalError {
-    @apply text-[#b42318] font-semibold text-[13px] mt-2.5;
-  }
-
-  .landing-modalActions {
-    @apply flex gap-2.5 justify-end mt-4;
-  }
-
-  .landing-modalBtn {
-    @apply h-11 cursor-pointer font-extrabold text-sm px-3.5 py-0 rounded-[14px] border-0 disabled:opacity-60 disabled:cursor-not-allowed;
-  }
-
-  .landing-modalBtnPrimary {
-    @apply text-white hover:brightness-[0.98];
-    background: var(--brand-blue);
-  }
-
-  .landing-modalBtnGhost {
-    @apply text-[#0b1220];
-    background: rgba(0, 0, 0, 0.06);
-  }
-
-  .landing-modalSuccess {
-    @apply flex gap-3 items-start border p-3 rounded-2xl border-solid border-[color:var(--brand-border)];
-    background: var(--brand-bg);
-  }
-
-  .landing-modalSuccessIcon {
-    @apply w-[34px] h-[34px] text-white grid place-items-center font-black rounded-xl;
-    background: var(--brand-blue);
-  }
-
-  .landing-modalSuccessTitle {
-    @apply font-black text-[#0b1220] tracking-[-0.01em];
-  }
-
-  .landing-modalSuccessDesc {
-    @apply font-semibold text-sm mt-0.5;
-    color: var(--muted);
-  }
-
-  .landing-modalEmail {
-    @apply text-[#0b1220] font-extrabold;
-  }
-
-  @media (max-width: 520px) {
-    .landing-modal {
-      @apply p-4 rounded-[18px];
-    }
-
-    .landing-modalActions {
-      @apply flex-col-reverse;
-    }
-
-    .landing-modalBtn {
-      @apply w-full;
-    }
+@media (max-width: 1100px) {
+  :root {
+    --card-h: auto;
+    --card-w: var(--card-w-m);
   }
 }

@@ -3,7 +3,7 @@
 import type React from "react";
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
-import { Poppins } from "next/font/google";
+import { Plus_Jakarta_Sans } from "next/font/google";
 import {
   FaFacebookF,
   FaLinkedinIn,
@@ -14,7 +14,7 @@ import { MdEmail } from "react-icons/md";
 import { FiChevronRight } from "react-icons/fi";
 import NotifyModal from "./NotifyModal";
 
-const poppins = Poppins({
+const jakarta = Plus_Jakarta_Sans({
   subsets: ["latin"],
   weight: ["400", "500", "600", "700", "800"],
 });
@@ -22,18 +22,21 @@ const poppins = Poppins({
 function HeroBlock() {
   return (
     <>
-      <div className="landing-heroFrame" aria-hidden>
+      <div
+        className="w-full grid place-items-center relative max-[1100px]:w-[var(--hero-frame-w-m)]"
+        aria-hidden
+      >
         <Image
           src="/pilots.png"
           alt="Pilots"
           width={840}
           height={634}
           priority
-          className="landing-heroImg"
+          className="w-[var(--hero-img-w)] max-[1100px]:w-[var(--hero-img-w-m)] h-auto block -translate-y-1.5 max-[1100px]:-translate-y-1 [filter:var(--drop)]"
         />
       </div>
 
-      <div className="landing-caption">
+      <div className="text-[length:var(--caption-size)] italic font-semibold text-[color:var(--landing-text)] text-center max-w-[48ch] mt-1.5">
         Advancing aviation expertise through knowledge, partnership, and
         professionalism.
       </div>
@@ -44,7 +47,7 @@ function HeroBlock() {
 export default function Page() {
   const [open, setOpen] = useState(false);
 
-  // ✅ detect mobile/tablet
+  // detect mobile/tablet
   const [isMobile, setIsMobile] = useState(false);
   useEffect(() => {
     const mq = window.matchMedia("(max-width: 1100px)");
@@ -183,28 +186,53 @@ export default function Page() {
   const fillW = Math.max(0, INSET + handleW + x);
 
   return (
-    <main className={`${poppins.className} landing-viewport`}>
-      <section className="landing-card">
-        <div className="landing-inner">
+    <main
+      className={[
+        jakarta.className,
+        // viewport (desktop + mobile)
+        "min-h-[100dvh] grid place-items-center justify-center overflow-hidden",
+        "p-[var(--vp-pad)] max-[1100px]:p-[var(--vp-pad-m)]",
+        "bg-[color:var(--landing-blue)]",
+      ].join(" ")}
+    >
+      <section
+        className={[
+          "w-[var(--card-w)] h-[var(--card-h)] rounded-[var(--card-radius)]",
+          "shadow-[var(--shadow-card)] overflow-hidden bg-white",
+          // mobile: keep equal blue frame + scroll inside card
+          "max-[1100px]:max-h-[var(--card-max-h-m)] max-[1100px]:overflow-y-auto",
+          "max-[1100px]:[-webkit-overflow-scrolling:touch]",
+        ].join(" ")}
+      >
+        <div
+          className={[
+            "w-full h-full p-[var(--card-pad)]",
+            "grid grid-cols-[var(--landing-cols)] items-center gap-[var(--col-gap)]",
+            "content-center justify-center",
+            "max-[1100px]:h-auto max-[1100px]:grid-cols-1 max-[1100px]:gap-[22px]",
+          ].join(" ")}
+        >
           {/* LEFT */}
-          <div className="landing-left">
-            <div className="landing-kicker">We Are</div>
+          <div className="min-w-0 flex flex-col items-start max-[1100px]:items-center max-[1100px]:text-center">
+            <div className="text-[color:var(--landing-text)] font-bold text-[length:var(--kicker)] leading-[1.15]">
+              We Are
+            </div>
 
-            <h1 className="landing-title">
+            <h1 className="text-[color:var(--landing-title)] font-extrabold text-[length:var(--title)] leading-[1.03] tracking-[-0.02em] mt-2.5 mb-0 mx-0">
               {/* Desktop */}
-              <span className="title-desktop">
+              <span className="inline max-[1100px]:hidden">
                 Elevating Our <br />
                 Digital Experience
               </span>
 
               {/* Mobile */}
-              <span className="title-mobile">
+              <span className="hidden max-[1100px]:inline">
                 Elevating <br />
                 Our Digital Experience
               </span>
             </h1>
 
-            <p className="landing-desc">
+            <p className="text-[color:var(--landing-text)] font-medium text-[length:var(--desc)] leading-[1.45] max-w-[56ch] mt-4 mb-0 mx-0 max-[1100px]:mx-auto">
               ICS Aviation is preparing a renewed digital platform designed to
               better serve aviation professionals, institutions, and partners.
               Our upcoming website will provide improved access to our training
@@ -212,19 +240,17 @@ export default function Page() {
               initiatives. Stay connected as we prepare to launch.
             </p>
 
-            {/* MOBILE HERO (shown only on mobile via CSS) */}
-            <div className="landing-heroSlot landing-heroSlot--mobile">
+            {/* MOBILE HERO */}
+            <div className="hidden max-[1100px]:block -translate-y-2 mt-[var(--hero-slot-mt)]">
               <HeroBlock />
             </div>
 
-            {/* ✅ COMBINED + CENTERED BLOCK */}
-            <div className="landing-actions">
-              {/* ✅ SLIDER */}
+            {/* Actions */}
+            <div className="flex flex-col items-center gap-[var(--actions-gap)] mt-[var(--actions-mt)]">
+              {/* Slider */}
               <div
                 ref={trackRef}
-                className={`landing-slide ${
-                  dragging || animating ? "is-dragging" : ""
-                }`}
+                className="w-[var(--slide-w)] h-[var(--slide-h)] shadow-[var(--shadow-slider)] relative overflow-hidden select-none touch-pan-y cursor-pointer rounded-full mx-auto bg-[#333]"
                 aria-label="Stay informed"
                 role={!isMobile ? "button" : undefined}
                 tabIndex={!isMobile ? 0 : undefined}
@@ -239,20 +265,27 @@ export default function Page() {
                 }}
               >
                 <div
-                  className="landing-slideFill"
-                  style={{ width: fillW }}
+                  className={[
+                    "absolute left-0 inset-y-0 w-0 rounded-full",
+                    "transition-[width] duration-[220ms] ease-out",
+                    dragging || animating ? "transition-none" : "",
+                  ].join(" ")}
+                  style={{ width: fillW, background: "var(--slide-fill)" }}
                   aria-hidden
                 />
-                <div className="landing-slideText">Stay Informed</div>
 
-                <div className="landing-slideArrow" aria-hidden>
+                <div className="absolute inset-0 grid place-items-center text-white font-bold text-[length:var(--slide-text)] tracking-[-0.01em] pointer-events-none">
+                  Stay Informed
+                </div>
+
+                <div className="absolute right-[18px] top-1/2 -translate-y-1/2 text-white pointer-events-none grid place-items-center text-[length:var(--slide-arrow)]">
                   <FiChevronRight />
                 </div>
 
                 <button
                   ref={handleRef}
                   type="button"
-                  className="landing-slideHandle"
+                  className="absolute left-[var(--slide-inset)] top-1/2 w-[var(--handle)] h-[var(--handle)] grid place-items-center cursor-grab active:cursor-grabbing will-change-transform touch-none shadow-[var(--shadow-handle)] p-0 rounded-full border-0 bg-white"
                   onPointerDown={onPointerDown}
                   onClick={(e) => {
                     if (!isMobile) {
@@ -268,55 +301,58 @@ export default function Page() {
                       dragging || animating ? "none" : "transform 220ms ease",
                   }}
                 >
-                  <MdEmail className="landing-slideMail" />
+                  <MdEmail className="text-[length:var(--slide-mail)] text-[color:var(--brand-blue)]" />
                 </button>
               </div>
 
-              {/* SOCIALS */}
-              <div className="landing-socials">
+              {/* Socials */}
+              <div className="flex gap-[var(--social-gap)] flex-wrap justify-center w-full">
                 <a
-                  className="landing-socialBtn"
+                  className="w-[var(--social)] h-[var(--social)] shadow-[var(--shadow-social)] grid place-items-center no-underline transition-transform duration-150 ease-out rounded-full border border-solid border-[color:var(--border-soft)] hover:-translate-y-0.5 bg-white"
                   href="https://www.facebook.com/ICS1Aviation"
                   aria-label="Facebook"
                   target="_blank"
                   rel="noreferrer"
                 >
-                  <FaFacebookF className="landing-socialIcon" />
+                  <FaFacebookF className="text-[length:var(--social-icon)] text-[#555]" />
                 </a>
+
                 <a
-                  className="landing-socialBtn"
+                  className="w-[var(--social)] h-[var(--social)] shadow-[var(--shadow-social)] grid place-items-center no-underline transition-transform duration-150 ease-out rounded-full border border-solid border-[color:var(--border-soft)] hover:-translate-y-0.5 bg-white"
                   href="https://www.linkedin.com/company/ics-aviation/"
                   aria-label="LinkedIn"
                   target="_blank"
                   rel="noreferrer"
                 >
-                  <FaLinkedinIn className="landing-socialIcon" />
+                  <FaLinkedinIn className="text-[length:var(--social-icon)] text-[#555]" />
                 </a>
+
                 <a
-                  className="landing-socialBtn"
+                  className="w-[var(--social)] h-[var(--social)] shadow-[var(--shadow-social)] grid place-items-center no-underline transition-transform duration-150 ease-out rounded-full border border-solid border-[color:var(--border-soft)] hover:-translate-y-0.5 bg-white"
                   href="https://www.instagram.com/ics_aviation/"
                   aria-label="Instagram"
                   target="_blank"
                   rel="noreferrer"
                 >
-                  <FaInstagram className="landing-socialIcon" />
+                  <FaInstagram className="text-[length:var(--social-icon)] text-[#555]" />
                 </a>
+
                 <a
-                  className="landing-socialBtn"
+                  className="w-[var(--social)] h-[var(--social)] shadow-[var(--shadow-social)] grid place-items-center no-underline transition-transform duration-150 ease-out rounded-full border border-solid border-[color:var(--border-soft)] hover:-translate-y-0.5 bg-white"
                   href="https://www.youtube.com/@ICSAviation-TrainingSolutions"
                   aria-label="YouTube"
                   target="_blank"
                   rel="noreferrer"
                 >
-                  <FaYoutube className="landing-socialIcon" />
+                  <FaYoutube className="text-[length:var(--social-icon)] text-[#555]" />
                 </a>
               </div>
             </div>
           </div>
 
           {/* RIGHT (desktop hero) */}
-          <div className="landing-right">
-            <div className="landing-heroSlot landing-heroSlot--desktop">
+          <div className="min-w-0 flex flex-col items-center justify-center max-[1100px]:hidden">
+            <div className="block -translate-y-3.5">
               <HeroBlock />
             </div>
           </div>
