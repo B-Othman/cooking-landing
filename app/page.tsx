@@ -66,6 +66,9 @@ export default function Page() {
   const [dragging, setDragging] = useState(false);
   const [animating, setAnimating] = useState(false);
 
+  // ✅ used to prevent "tap click" after a real drag
+  const didMoveRef = useRef(false);
+
   const [handleW, setHandleW] = useState(56);
   useEffect(() => {
     const el = handleRef.current;
@@ -103,7 +106,7 @@ export default function Page() {
     reset();
   };
 
-  // Desktop click -> animate slide then open modal
+  // ✅ Tap/click anywhere (desktop + mobile) -> animate slide then open modal
   const slideToEndAndOpen = () => {
     const max = getMaxX();
     if (!max) return openModal();
@@ -137,12 +140,15 @@ export default function Page() {
     requestAnimationFrame(tick);
   };
 
-  // Mobile drag only
+  // Mobile drag (still supported)
   const onPointerDown = (e: React.PointerEvent<HTMLButtonElement>) => {
     if (!isMobile) return;
+    if (animating) return;
 
     const maxX = getMaxX();
     if (!maxX) return;
+
+    didMoveRef.current = false;
 
     e.currentTarget.setPointerCapture(e.pointerId);
     setDragging(true);
@@ -153,6 +159,9 @@ export default function Page() {
     const move = (ev: PointerEvent) => {
       ev.preventDefault();
       const dx = ev.clientX - startClientX;
+
+      if (Math.abs(dx) > 3) didMoveRef.current = true;
+
       const next = clamp(startX + dx, 0, maxX);
       xRef.current = next;
       setX(next);
@@ -189,7 +198,6 @@ export default function Page() {
     <main
       className={[
         jakarta.className,
-        // viewport (desktop + mobile)
         "min-h-[100dvh] grid place-items-center justify-center overflow-hidden",
         "p-[var(--vp-pad)] max-[1100px]:p-[var(--vp-pad-m)]",
         "bg-[color:var(--landing-blue)]",
@@ -199,7 +207,6 @@ export default function Page() {
         className={[
           "w-[var(--card-w)] h-[var(--card-h)] rounded-[var(--card-radius)]",
           "shadow-[var(--shadow-card)] overflow-hidden bg-white",
-          // mobile: keep equal blue frame + scroll inside card
           "max-[1100px]:max-h-[var(--card-max-h-m)] max-[1100px]:overflow-y-auto",
           "max-[1100px]:[-webkit-overflow-scrolling:touch]",
         ].join(" ")}
@@ -219,13 +226,11 @@ export default function Page() {
             </div>
 
             <h1 className="text-[color:var(--landing-title)] font-extrabold text-[length:var(--title)] leading-[1.03] tracking-[-0.02em] mt-2.5 mb-0 mx-0">
-              {/* Desktop */}
               <span className="inline max-[1100px]:hidden">
                 Elevating Our <br />
                 Digital Experience
               </span>
 
-              {/* Mobile */}
               <span className="hidden max-[1100px]:inline">
                 Elevating <br />
                 Our Digital Experience
@@ -252,13 +257,15 @@ export default function Page() {
                 ref={trackRef}
                 className="w-[var(--slide-w)] h-[var(--slide-h)] shadow-[var(--shadow-slider)] relative overflow-hidden select-none touch-pan-y cursor-pointer rounded-full mx-auto bg-[#333]"
                 aria-label="Stay informed"
-                role={!isMobile ? "button" : undefined}
-                tabIndex={!isMobile ? 0 : undefined}
+                role="button"
+                tabIndex={0}
                 onClick={() => {
-                  if (!isMobile) slideToEndAndOpen();
+                  // ✅ now works on mobile too (tap to slide)
+                  if (dragging || animating) return;
+                  slideToEndAndOpen();
                 }}
                 onKeyDown={(e) => {
-                  if (!isMobile && (e.key === "Enter" || e.key === " ")) {
+                  if (e.key === "Enter" || e.key === " ") {
                     e.preventDefault();
                     slideToEndAndOpen();
                   }
@@ -288,13 +295,16 @@ export default function Page() {
                   className="absolute left-[var(--slide-inset)] top-1/2 w-[var(--handle)] h-[var(--handle)] grid place-items-center cursor-grab active:cursor-grabbing will-change-transform touch-none shadow-[var(--shadow-handle)] p-0 rounded-full border-0 bg-white"
                   onPointerDown={onPointerDown}
                   onClick={(e) => {
-                    if (!isMobile) {
-                      e.preventDefault();
-                      e.stopPropagation();
-                      slideToEndAndOpen();
-                    }
+                    // ✅ prevent track click and ignore click-after-drag
+                    e.preventDefault();
+                    e.stopPropagation();
+                    if (didMoveRef.current) return;
+                    if (dragging || animating) return;
+                    slideToEndAndOpen();
                   }}
-                  aria-label={isMobile ? "Drag to open" : "Click to open"}
+                  aria-label={
+                    isMobile ? "Tap or drag to open" : "Click to open"
+                  }
                   style={{
                     transform: `translate3d(${x}px, -50%, 0)`,
                     transition:
